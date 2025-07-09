@@ -3,6 +3,7 @@ import User from "../models/userModal.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import SellerStatus from "../models/sellerStatusModal.js";
 dotenv.config();
 
 export const registerUser = async (req, res) => {
@@ -10,7 +11,7 @@ export const registerUser = async (req, res) => {
         const { fullname, email, password, role } = req.body;
 
         if (!["user", "seller"].includes(role)) {
-            return res.status(400).json({ message: "Invalid role for registration" }); // Use 400, not 404
+            return res.status(400).json({ message: "Invalid role for registration" });
         }
 
         const existingUser = await User.findOne({ email });
@@ -18,7 +19,6 @@ export const registerUser = async (req, res) => {
             return res.status(409).json({ message: "User already exists" });
         }
 
-        // ⛔ FIX: You forgot to `await` these async functions
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -28,6 +28,14 @@ export const registerUser = async (req, res) => {
             password: hashedPassword,
             role,
         });
+
+        if (role === "seller") {
+            await SellerStatus.create({
+                seller: newUser._id,
+                isApproved: false,
+                rejectionReason: ""
+            });
+        }
 
         res.status(201).json({ message: "User registered successfully", user: newUser });
     } catch (error) {
