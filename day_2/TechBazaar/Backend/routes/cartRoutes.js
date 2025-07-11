@@ -22,7 +22,7 @@ router.put("/:id", protect, updateCartItem);
 // ✅ Delete a cart item
 router.delete("/:id", protect, removeCartItem);
 
-// 🔄 Optional: Clear all cart items
+// ✅ Clear all cart items
 router.delete("/", protect, clearCart);
 
 export default router;

@@ -1,4 +1,4 @@
-import CartItem from "../models/cartModel.js";
+import CartItem from "../models/cartModal.js";
 import Product from "../models/productModel.js";
 
 // ✅ Add item to cart
@@ -86,7 +86,7 @@ export const removeCartItem = async (req, res) => {
     }
 };
 
-// 🔄 (Optional) Clear all items from cart
+// ✅ Clear all items from cart
 export const clearCart = async (req, res) => {
     try {
         await CartItem.deleteMany({ user: req.user.id });
