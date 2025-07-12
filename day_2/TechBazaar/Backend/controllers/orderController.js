@@ -61,7 +61,7 @@ export const updateOrderStatus = async (req, res) => {
             return res.status(404).json({ message: "Order not found" });
         }
 
-        // Optional: check if current user is the seller for at least one item
+        // check if current user is the seller for at least one item
         const isSeller = order.items.some(item => item.seller.toString() === req.user.id);
 
         if (!isSeller) {
@@ -93,7 +93,7 @@ export const cancelOrder = async (req, res) => {
             return res.status(403).json({ message: "Not authorized to cancel this order" });
         }
 
-        if (order.status === "Delivered") {
+        if (order.status === "Shipped") {
             return res.status(400).json({ message: "Delivered order cannot be cancelled" });
         }
 
